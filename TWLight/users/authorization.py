@@ -12,6 +12,7 @@ from django.http import HttpResponseRedirect
 from django.views.generic.base import View
 from django.views.generic.edit import FormView
 from django.utils.translation import ugettext as _
+from django.shortcuts import get_object_or_404
 
 from .helpers.wiki_list import WIKI_DICT
 from .forms import HomeWikiForm
@@ -294,7 +295,7 @@ class OAuthBackend(object):
 
     def get_user(self, user_id):
         try:
-            return User.objects.get(pk=user_id)
+            return get_object_or_404(User, pk=user_id)
         except User.DoesNotExist:
             logger.warning('There is no user {user_id}'.format(user_id=user_id))
             return None

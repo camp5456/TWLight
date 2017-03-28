@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.http import Http404, HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from django.views.generic import ListView, DetailView, View
+from django.shortcuts import get_object_or_404
 
 from TWLight.applications.models import Application
 from TWLight.graphs.helpers import (get_median,
@@ -100,7 +101,7 @@ class PartnersToggleWaitlistView(CoordinatorsOnly, View):
             # This only looks at AVAILABLE and WAITLIST partners, which is
             # good; we only want staff to be able to change the status of
             # NOT_AVAILABLE partners (using the admin interface).
-            partner = Partner.objects.get(pk=self.kwargs['pk'])
+            partner = get_object_or_404(Partner, pk=self.kwargs['pk'])
         except Partner.DoesNotExist:
             raise Http404
 

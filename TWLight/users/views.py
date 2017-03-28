@@ -15,6 +15,7 @@ from django.views.generic.edit import UpdateView, FormView
 from django.utils.decorators import classonlymethod
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext_lazy as _
+from django.shortcuts import get_object_or_404
 
 from TWLight.view_mixins import CoordinatorsOrSelf, SelfOnly, coordinators
 
@@ -53,7 +54,7 @@ class UserDetailView(SelfOnly, TemplateView):
         """
         assert 'pk' in self.kwargs.keys()
         try:
-            return User.objects.get(pk=self.kwargs['pk'])
+            return get_object_or_404(User, pk=self.kwargs['pk'])
         except User.DoesNotExist:
             raise Http404
 

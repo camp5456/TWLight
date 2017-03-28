@@ -24,6 +24,7 @@ from django.views.generic.base import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, UpdateView
 from django.views.generic.list import ListView
+from django.shortcuts import get_object_or_404
 
 from TWLight.view_mixins import (CoordinatorsOrSelf,
                                  CoordinatorsOnly,
@@ -459,7 +460,7 @@ class _BaseListApplicationView(CoordinatorsOnly, ToURequired, ListView):
         try:
             # request.POST['editor'] will be the pk of an Editor instance, if
             # it exists.
-            editor = Editor.objects.get(pk=request.POST['editor'])
+            editor = get_object_or_404(Editor, pk=request.POST['editor'])
         except KeyError:
             # Better to ask forgiveness than permission; if the POST data didn't
             # have an editor, the user didn't filter by editor, and that's OK.
@@ -472,7 +473,7 @@ class _BaseListApplicationView(CoordinatorsOnly, ToURequired, ListView):
             raise
 
         try:
-            partner = Partner.objects.get(pk=request.POST['partner'])
+            partner = get_object_or_404(Partner, pk=request.POST['partner'])
         except KeyError:
             partner = None
         except Partner.DoesNotExist:
@@ -677,7 +678,7 @@ class BatchEditView(CoordinatorsOnly, ToURequired, View):
         # important work for Applications.
         for app_pk in request.POST.getlist('applications'):
             try:
-                app = Application.objects.get(pk=app_pk)
+                app = get_object_or_404(Application, pk=app_pk)
             except Application.DoesNotExist:
                 logger.exception('Could not find app with posted pk {pk}; '
                     'continuing through remaining apps'.format(pk=app_pk))
@@ -759,7 +760,7 @@ class RenewApplicationView(SelfOnly, View):
     """
 
     def get_object(self):
-        app = Application.objects.get(pk=self.kwargs['pk'])
+        app = get_object_or_404(Application, pk=self.kwargs['pk'])
 
         try:
             assert app.status == Application.APPROVED

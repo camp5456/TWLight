@@ -12,6 +12,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.test import TestCase, Client, RequestFactory
+from django.shortcuts import get_object_or_404
 
 from TWLight.resources.models import Partner, Stream
 from TWLight.resources.factories import PartnerFactory, StreamFactory
@@ -2259,7 +2260,7 @@ class BatchEditTest(TestCase):
         self.assertEqual(Application.objects.count(), 1)
 
         # Refresh object from db to check for changes (there shouldn't be any).
-        app = Application.objects.get(pk=self.application.pk)
+        app = get_object_or_404(Application, pk=self.application.pk)
 
         self.assertEqual(app.editor, self.user.editor)
         self.assertEqual(app.partner, self.partner)

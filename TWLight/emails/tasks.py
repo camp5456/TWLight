@@ -30,6 +30,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.urlresolvers import reverse_lazy
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
+from django.shortcuts import get_object_or_404
 
 from TWLight.applications.models import Application
 from TWLight.resources.models import Partner
@@ -189,7 +190,7 @@ def update_app_status_on_save(sender, instance, **kwargs):
 
     # Case 1: Application already existed; status has been changed.
     if instance.id:
-        orig_app = Application.objects.get(pk=instance.id)
+        orig_app = get_object_or_404(Application, pk=instance.id)
         orig_status = orig_app.status
 
         if orig_status != instance.status:
@@ -227,7 +228,7 @@ def notify_applicants_when_waitlisted(sender, instance, **kwargs):
     should be notified.
     """
     if instance.id:
-        orig_partner = Partner.objects.get(pk=instance.id)
+        orig_partner = get_object_or_404(Partner, pk=instance.id)
 
         if ((orig_partner.status != instance.status) and 
             instance.status == Partner.WAITLIST):

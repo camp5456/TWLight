@@ -9,6 +9,7 @@ from django.db.models import Avg, Count
 from django.http import HttpResponse
 from django.views.generic import TemplateView, View
 from django.utils.translation import ugettext as _
+from django.shortcuts import get_object_or_404
 
 from TWLight.applications.models import Application
 from TWLight.resources.models import Partner
@@ -183,7 +184,7 @@ class CSVNumPartners(_CSVDownloadView):
             pk = self.kwargs['pk']
 
             try:
-                queryset = Partner.objects.get(pk=pk)
+                queryset = get_object_or_404(Partner, pk=pk)
             except Partner.DoesNotExist:
                 logger.exception('Tried to access data for partner #{pk}, who '
                                  'does not exist'.format(pk=pk))
@@ -287,7 +288,7 @@ class CSVAppCountByPartner(_CSVDownloadView):
     def _write_data(self, response):
         pk = self.kwargs['pk']
         try:
-            partner = Partner.objects.get(pk=pk)
+            partner = get_object_or_404(Partner, pk=pk)
         except Partner.DoesNotExist:
             logger.exception('Tried to access data for partner #{pk}, who '
                              'does not exist'.format(pk=pk))
@@ -315,7 +316,7 @@ class CSVUserCountByPartner(_CSVDownloadView):
         pk = self.kwargs['pk']
 
         try:
-            partner = Partner.objects.get(pk=pk)
+            partner = get_object_or_404(Partner, pk=pk)
         except Partner.DoesNotExist:
             logger.exception('Tried to access data for partner #{pk}, who '
                              'does not exist'.format(pk=pk))
